@@ -9,7 +9,8 @@ Route.group(() => {
       Route.group(() => {
       Route.get("todos", "TodosController.index");
       Route.get("todos/:id", "TodosController.show");
-      Route.put("todos/update", "TodosController.update");
+      Route.put("todos/:id", "TodosController.update");
+      Route.delete("todos/:id", "TodosController.destroy");
       Route.post("todos", "TodosController.store");
       }).middleware("auth:api");
       

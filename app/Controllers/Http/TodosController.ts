@@ -20,6 +20,8 @@ export default class TodosController {
         	console.log(error)
         }
     }
+
+   
     
     public async update({ request, params}: HttpContextContract)
     {
@@ -27,7 +29,7 @@ export default class TodosController {
         if (todo) {
             todo.title = request.input('title');
             todo.desc = request.input('desc');
-            todo.status = request.input('done')
+            todo.done = request.input('done')
             
             if (await todo.save()) {
             	return todo

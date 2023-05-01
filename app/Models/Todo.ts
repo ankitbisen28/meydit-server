@@ -13,7 +13,7 @@ export default class Todo extends BaseModel {
   public desc: string;
 
   @column()
-  public status: number;
+  public done: number;
 
   @column()
   public userId: number;
