@@ -5,7 +5,8 @@ Route.group(() => {
 
   Route.post("register", "AuthController.register");
   Route.post("login", "AuthController.login");
-  
+  Route.post("post/job", "PostJobsController.Post")
+
       Route.group(() => {
       Route.get("todos", "TodosController.index");
       Route.get("todos/:id", "TodosController.show");
