@@ -4,7 +4,13 @@ import {
   column,
   beforeSave,
   BaseModel,
+  HasMany,
+  hasMany,
+  hasOne,
+  HasOne,
 } from '@ioc:Adonis/Lucid/Orm'
+import PostJob from './PostJob'
+import Profile from './Profile'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -27,6 +33,12 @@ export default class User extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @hasMany(() => PostJob)
+  public posts: HasMany<typeof PostJob>
+  
+  @hasOne(() => Profile)
+  public profiles: HasOne<typeof Profile>
 
   @beforeSave()
   public static async hashPassword (user: User) {
