@@ -1,35 +1,58 @@
 import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import User from "App/Models/User";
-export default class AuthController {
-public async login({ request, auth }: HttpContextContract) {
+import { schema, rules } from "@ioc:Adonis/Core/Validator";
 
-    const email = request.input("email");
-    const password = request.input("password");
-    
-    const token = await auth.use("api").attempt(email, password, {
+export default class AuthController {
+  public async login({ request, auth }: HttpContextContract) {
+    //Validate user details
+    const validationSchema = schema.create({
+      email: schema.string({ trim: true }, [rules.email()]),
+      password: schema.string({ trim: true }, [
+        rules.minLength(8),
+        rules.maxLength(20),
+      ]),
+    });
+
+    const userDetails = await request.validate({
+      schema: validationSchema,
+    });
+
+    const token = await auth
+      .use("api")
+      .attempt(userDetails.email, userDetails.password, {
         expiresIn: "10 days",
-        });
-        return token.toJSON();
-    }
-    
-    public async register({ request, auth }: HttpContextContract) {
-    
-        const email = request.input("email");
-        const password = request.input("password");
-        
-        /**
-        * Create a new user
-        */
-        
-        const user = new User();
-        user.email = email;
-        user.password = password;
-        await user.save();
-        
-        const token = await auth.use("api").login(user, {
-        	expiresIn: "10 days",
-        });
-        
-        return token.toJSON();
-    }
+      });
+    return token.toJSON();
+  }
+
+  public async register({ request, auth }: HttpContextContract) {
+    //Validate user details
+    const validationSchema = schema.create({
+      email: schema.string({ trim: true }, [
+        rules.email(),
+        rules.unique({ table: "users", column: "email" }),
+      ]),
+      password: schema.string({ trim: true }, [
+        rules.minLength(8),
+        rules.maxLength(20),
+      ]),
+    });
+
+    const userDetails = await request.validate({
+      schema: validationSchema,
+    });
+
+    //Create a new user
+
+    const user = new User();
+    user.email = userDetails.email;
+    user.password = userDetails.password;
+    await user.save();
+
+    const token = await auth.use("api").login(user, {
+      expiresIn: "10 days",
+    });
+
+    return token.toJSON();
+  }
 }

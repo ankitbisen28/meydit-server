@@ -13,7 +13,7 @@ export default class Profile extends BaseModel {
   public last_name: string
 
   @column()
-  public phone: number
+  public phone: string
   
   @column()
   public address: string

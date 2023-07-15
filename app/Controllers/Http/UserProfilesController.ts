@@ -1,6 +1,7 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import Profile from "App/Models/Profile";
 import User from "App/Models/User";
+import { schema, rules } from "@ioc:Adonis/Core/Validator";
 
 export default class UserProfilesController {
   public async index({ auth }: HttpContextContract) {
@@ -12,18 +13,31 @@ export default class UserProfilesController {
   }
 
   public async store({ auth, request, response }: HttpContextContract) {
-    // const user = await auth.authenticate();
+  
+    const validationSchema = schema.create({
+      first_name: schema.string([rules.maxLength(10), rules.minLength(3)]),
+      last_name: schema.string([rules.maxLength(10), rules.minLength(3)]),
+      phone: schema.string([rules.maxLength(13), rules.minLength(10)]),
+      address: schema.string(),
+      state: schema.string(),
+      post_code: schema.number(),
+    });
+
+    const userDetails = await request.validate({
+      schema: validationSchema,
+    });
+    
     const profile = new Profile();
-    profile.first_name = request.input("first_name");
-    profile.last_name = request.input("last_name");
-    profile.phone = request.input("phone");
-    profile.address = request.input("address");
-    profile.state = request.input("state");
-    profile.post_code = request.input("post_code");
+    profile.first_name = userDetails.first_name
+    profile.last_name = userDetails.last_name
+    profile.phone = userDetails.phone
+    profile.address = userDetails.address
+    profile.state = userDetails.state
+    profile.post_code = userDetails.post_code
     profile.userId = auth.user!.id;
-    // await user.related('profile_id').save(profile));
+
+    // Save userDetail
     await profile.save();
-    // console.log(user.email)
     response.send(profile);
   }
 }
