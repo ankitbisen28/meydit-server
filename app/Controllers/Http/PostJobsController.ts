@@ -10,19 +10,21 @@ export default class PostJobsController {
   }
 
   public async Post({ request, auth }: HttpContextContract) {
-    const name = request.input("name");
+    const first_name = request.input("first_name");
+    const last_name = request.input("last_name");
     const phone_num = request.input("phone_num");
     const email = request.input("email");
     const address = request.input("address");
     const state = request.input("state");
-    const zip = request.input("zip");
+    const zip = request.input("post_code");
     const type_clothing = request.input("type_clothing");
     const description = request.input("post_description");
     const budget = request.input("budget");
     const image = request.file("image");
 
     const post_job = new PostJob();
-    post_job.name = name;
+    post_job.first_name = first_name;
+    post_job.last_name = last_name;
     post_job.phone_num = phone_num;
     post_job.email = email;
     post_job.address = address;
