@@ -1,38 +1,41 @@
-import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
-import User from './User'
+import { DateTime } from "luxon";
+import { BaseModel, BelongsTo, belongsTo, column } from "@ioc:Adonis/Lucid/Orm";
+import User from "./User";
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
-  public id: number
+  public id: number;
 
   @column()
-  public first_name: string
+  public first_name: string;
 
   @column()
-  public last_name: string
+  public last_name: string;
 
   @column()
-  public phone: string
-  
+  public phone: string;
+
   @column()
-  public address: string
-  
+  public address: string;
+
   @column()
-  public state: string
-  
+  public state: string;
+
   @column()
-  public post_code: number
-  
+  public post_code: number;
+
   @column()
-  public userId: number
+  public image: string;
+
+  @column()
+  public userId: number;
 
   @belongsTo(() => User)
-  public profile_id: BelongsTo<typeof User>
-  
+  public profile_id: BelongsTo<typeof User>;
+
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  public createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  public updatedAt: DateTime;
 }
