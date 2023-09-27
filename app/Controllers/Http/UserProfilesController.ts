@@ -42,7 +42,7 @@ export default class UserProfilesController {
       await image.move(Application.publicPath("profileImage"), {
         name: imageName,
       });
-      profile.image = `images/${imageName}`;
+      profile.image = imageName;
     }
 
     // Save userDetail

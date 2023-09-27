@@ -9,5 +9,6 @@ Route.group(() => {
     Route.post("post/job", "PostJobsController.Post");
     Route.get("user/profiles", "UserProfilesController.index");
     Route.post("user/profile/create", "UserProfilesController.store");
+    Route.get("user/image/:filename", "UserImagesController.index");
   }).middleware("auth:api");
 }).prefix("api");
