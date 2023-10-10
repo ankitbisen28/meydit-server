@@ -3,7 +3,6 @@ import PostJob from "App/Models/PostJob";
 import Application from "@ioc:Adonis/Core/Application";
 
 export default class PostJobsController {
-
   public async index({ response }: HttpContextContract) {
     const posts = await PostJob.query();
     response.send(posts);
@@ -20,7 +19,7 @@ export default class PostJobsController {
     const type_clothing = request.input("type_clothing");
     const description = request.input("post_description");
     const budget = request.input("budget");
-    const image = request.file("image");
+    const images = request.files("images");
 
     const post_job = new PostJob();
     post_job.first_name = first_name;
@@ -35,12 +34,16 @@ export default class PostJobsController {
     post_job.budget = budget;
     post_job.userId = auth.user!.id;
 
-    if (image) {
-      const imageName = new Date().getTime().toString() + `.${image.extname}`;
-      await image.move(Application.publicPath("images"), {
-        name: imageName,
-      });
-      post_job.image = `images/${imageName}`;
+    if (images) {
+      const imagePaths: string[] = [];
+      for (let image of images) {
+        const imageName = new Date().getTime().toString() + `.${image.extname}`;
+        await image.move(Application.publicPath("images"), {
+          name: imageName,
+        });
+        imagePaths.push(imageName);
+      }
+      post_job.images = JSON.stringify(imagePaths); // Serialize the array to JSON
     }
 
     post_job.save();
